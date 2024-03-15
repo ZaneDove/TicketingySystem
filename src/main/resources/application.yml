@@ -1,0 +1,11 @@
+zeebe:
+  client:
+    cloud:
+      region: jfk-1
+      clusterId: c31853d1-8836-462a-aa3a-567d91462308
+      clientId: 6ituWP6_OwdN2UrNBnyD9d3DFTvBxkVa
+      clientSecret: N2HZSKP.Of.yH15hwBd0NqkFeie3MwW1lc_6Ny58HNxj63srZCIuhXRSX.dy~pu.
+
+# Create your API key via https://api-ninjas.com/profile
+api-ninjas:
+  key: BetwqQ70xBIGoqlTQ2w/ZQ==UX6KpZ4M0IyH4lKM
