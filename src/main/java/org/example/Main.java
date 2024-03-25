@@ -29,13 +29,15 @@ public class Main {
         // get priority and issueDescription
         String priority = (String) variablesAsMap.get("priority");
         String info = (String) variablesAsMap.get("issueDescription");
+        String email = (String) variablesAsMap.get("email");
+        String effect = (String) variablesAsMap.get("effect");
         //new ticket
         Ticket ticket;
         //if list is empty tiket no = 1, else tikcetno = list size + 1
         if (ticketArrayList.isEmpty()) {
-            ticket = new Ticket(1, info, true, priority);
+            ticket = new Ticket(1, info, true, priority, email, effect);
         } else {
-            ticket = new Ticket((ticketArrayList.size() + 1), info, true, priority);
+            ticket = new Ticket((ticketArrayList.size() + 1), info, true, priority, email, effect);
         }
         //add to list
         ticketArrayList.add(ticket);
@@ -51,7 +53,7 @@ public class Main {
                 }));
 
     }
-
+        // zeebe worker start
     @ZeebeWorker(type = "DetermineSLA")
     public void DetermineSLA(final JobClient client, final ActivatedJob job) {
         // job complete
@@ -62,6 +64,7 @@ public class Main {
                 }));
 
     }
+    // zeebe worker end
 
     @ZeebeWorker(type = "closeTicket")
     public void closeTicket(final JobClient client, final ActivatedJob job) {
