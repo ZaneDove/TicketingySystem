@@ -1,29 +1,29 @@
 package org.example;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import io.camunda.zeebe.spring.client.properties.ZeebeClientConfigurationProperties;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.client.api.worker.JobClient;
 import io.camunda.zeebe.spring.client.EnableZeebeClient;
 import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import static com.fasterxml.jackson.core.io.NumberInput.parseAsInt;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootApplication
 @EnableZeebeClient
 public class Main {
-ArrayList<Ticket> ticketArrayList = new ArrayList<Ticket>();
-    public static void main(String[] args) { SpringApplication.run(Main.class, args);
+    ArrayList<Ticket> ticketArrayList = new ArrayList<Ticket>();
+
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
 
     }
+
     //open ticket worker
     @ZeebeWorker(type = "OpenTicket")
-    public void OpenTicket(final JobClient client, final ActivatedJob job){
+    public void OpenTicket(final JobClient client, final ActivatedJob job) {
         //get variables as map
         Map<String, Object> variablesAsMap = job.getVariablesAsMap();
         // get priority and issueDescription
@@ -32,17 +32,17 @@ ArrayList<Ticket> ticketArrayList = new ArrayList<Ticket>();
         //new ticket
         Ticket ticket;
         //if list is empty tiket no = 1, else tikcetno = list size + 1
-        if (ticketArrayList.isEmpty()){
+        if (ticketArrayList.isEmpty()) {
             ticket = new Ticket(1, info, true, priority);
-        }else {
+        } else {
             ticket = new Ticket((ticketArrayList.size() + 1), info, true, priority);
         }
         //add to list
         ticketArrayList.add(ticket);
-        //add tikcet no to map
+        //add ticket no to map
         HashMap<String, Object> variables = new HashMap<>();
         //complete job send ticketNo
-        variables.put("ticketNo",ticket.getTicketNo());
+        variables.put("ticketNo", ticket.getTicketNo());
         client.newCompleteCommand(job.getKey())
                 .variables(variables)
                 .send()
@@ -51,8 +51,9 @@ ArrayList<Ticket> ticketArrayList = new ArrayList<Ticket>();
                 }));
 
     }
+
     @ZeebeWorker(type = "DetermineSLA")
-    public void DetermineSLA(final JobClient client, final ActivatedJob job){
+    public void DetermineSLA(final JobClient client, final ActivatedJob job) {
         // job complete
         client.newCompleteCommand(job.getKey())
                 .send()
@@ -61,8 +62,9 @@ ArrayList<Ticket> ticketArrayList = new ArrayList<Ticket>();
                 }));
 
     }
+
     @ZeebeWorker(type = "closeTicket")
-    public void closeTicket(final JobClient client, final ActivatedJob job){
+    public void closeTicket(final JobClient client, final ActivatedJob job) {
         // get variables as map
         Map<String, Object> variablesAsMap = job.getVariablesAsMap();
         // get ticket no as string
@@ -70,7 +72,7 @@ ArrayList<Ticket> ticketArrayList = new ArrayList<Ticket>();
         //Convert to int
         int ticketNo = Integer.parseInt(ticketNoAsString);
         //get ticket from array list (ticketNo - 1)
-        Ticket tempTicket = ticketArrayList.get(ticketNo-1);
+        Ticket tempTicket = ticketArrayList.get(ticketNo - 1);
         // ticket open = false
         tempTicket.setTicketOpen(false);
         //ticket in arrray = temp ticket
@@ -85,7 +87,6 @@ ArrayList<Ticket> ticketArrayList = new ArrayList<Ticket>();
                 }));
 
     }
-
 
 
 }
