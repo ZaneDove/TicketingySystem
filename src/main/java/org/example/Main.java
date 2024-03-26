@@ -99,6 +99,7 @@ public class Main {
     }
 
     //get ticket
+    //use newTicket name = getTicket(ticket number); to find ticket from array
     private Ticket getTicket(int ticketNo) {
         //check if ticket exists
         // Check if ticket exists before trying to get from list
@@ -110,7 +111,7 @@ public class Main {
             // check ticket priority and effect are not changed
         }
     }
-    // zeebe worker end
+
 
     @ZeebeWorker(type = "closeTicket")
     public void closeTicket(final JobClient client, final ActivatedJob job) {
