@@ -42,32 +42,7 @@ ArrayList<Ticket> ticketArrayList = new ArrayList<Ticket>();
                 }));
 
     }
-    @ZeebeWorker(type = "DetermineSLA")
-    public void DetermineSLA(final JobClient client, final ActivatedJob job) {
 
-        client.newCompleteCommand(job.getKey())
-                .send()
-                .exceptionally((throwable -> {
-                    throw new RuntimeException("Could not complete job", throwable);
-                }));
-    }
-    //complete ticket
-    @ZeebeWorker(type = "closeTicket")
-    public void closeTicket(final JobClient client, final ActivatedJob job) {
-        Map<String, Object> variablesAsMap = job.getVariablesAsMap();
-        String ticketNoAsString = (String) variablesAsMap.get("ticketNo");
-        int ticketNo = Integer.parseInt(ticketNoAsString);
-        // get ticket from array
-        Ticket ticket = ticketArrayList.get(ticketNo - 1);
-        //set as ticket open to false
-        ticket.setTicketOpen(false);
-        ticketArrayList.set(ticketNo - 1, ticket);
-        client.newCompleteCommand(job.getKey())
-                .send()
-                .exceptionally((throwable -> {
-                    throw new RuntimeException("Could not complete job", throwable);
-                }));
-    }
 
 
 }
