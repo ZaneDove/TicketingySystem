@@ -5,25 +5,42 @@ import java.time.LocalDateTime;
 
 public class Ticket {
     int ticketNo;
-    String TicketInfo;
+    String ticketInfo;
     Boolean ticketOpen;
-    String Priority;
+    String priority;
     String email;
     String effect;
     LocalDateTime startTime;
-    Time responseTime;
-    Time resoultionTime;
+    int responseTimeInDays;
+    int resolutionTimeInDays;
     Time actualResoultionTime;
     Time loggedTime;
 
     public Ticket(int ticketNo, String ticketInfo, Boolean ticketOpen, String priority, String email, String effect) {
         this.ticketNo = ticketNo;
-        TicketInfo = ticketInfo;
+        this.ticketInfo = ticketInfo;
         this.ticketOpen = ticketOpen;
-        Priority = priority;
+        this.priority = priority;
         this.email = email;
         this.effect = effect;
         this.startTime = LocalDateTime.now();
+    }
+
+    public void checkPriorityEffect(String newPriority, String NewEffect) {
+        boolean priorityCheck = this.priority != null && this.priority.equals(newPriority);
+        boolean effectCheck = this.effect != null && this.effect.equals(NewEffect);
+
+        if (!priorityCheck && !effectCheck) {
+            System.out.println(ticketNo + " has been updated");
+            this.priority = newPriority;
+            this.effect = NewEffect;
+        } else if (!priorityCheck && effectCheck) {
+            System.out.println(ticketNo + " has been updated");
+            this.priority = newPriority;
+        } else if (priorityCheck && !effectCheck) {
+            System.out.println(ticketNo + " has been updated");
+            this.effect = NewEffect;
+        }
     }
 
     public String getEmail() {
@@ -50,25 +67,26 @@ public class Ticket {
         this.startTime = startTime;
     }
 
-    public Time getResponseTime() {
-        return responseTime;
+    public int getResponseTimeInDays() {
+        return responseTimeInDays;
     }
 
-    public void setResponseTime(Time responseTime) {
-        this.responseTime = responseTime;
+    public void setResponseTimeInDays(int responseTime) {
+        this.responseTimeInDays = responseTime;
     }
 
-    public Time getResoultionTime() {
-        return resoultionTime;
+    public int getResolutionTimeInDays() {
+        return resolutionTimeInDays;
     }
 
-    public void setResoultionTime(Time resoultionTime) {
-        this.resoultionTime = resoultionTime;
+    public void setResolutionTimeInDays(int resolutionTimeInDays) {
+        this.resolutionTimeInDays = resolutionTimeInDays;
     }
 
     public Time getActualResoultionTime() {
         return actualResoultionTime;
     }
+
 
     public void setActualResoultionTime(Time actualResoultionTime) {
         this.actualResoultionTime = actualResoultionTime;
@@ -83,11 +101,11 @@ public class Ticket {
     }
 
     public String getPriority() {
-        return Priority;
+        return priority;
     }
 
     public void setPriority(String priority) {
-        Priority = priority;
+        this.priority = priority;
     }
 
     public int getTicketNo() {
@@ -99,11 +117,11 @@ public class Ticket {
     }
 
     public String getTicketInfo() {
-        return TicketInfo;
+        return ticketInfo;
     }
 
     public void setTicketInfo(String ticketInfo) {
-        TicketInfo = ticketInfo;
+        this.ticketInfo = ticketInfo;
     }
 
     public Boolean getTicketOpen() {

@@ -18,7 +18,6 @@ public class Main {
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
-
     }
 
     //open ticket worker
@@ -33,7 +32,7 @@ public class Main {
         String effect = (String) variablesAsMap.get("effect");
         //new ticket
         Ticket ticket;
-        //if list is empty tiket no = 1, else tikcetno = list size + 1
+        //if list is empty ticket no = 1, else ti ticketNo = list size + 1
         if (ticketArrayList.isEmpty()) {
             ticket = new Ticket(1, info, true, priority, email, effect);
         } else {
@@ -43,6 +42,8 @@ public class Main {
         ticketArrayList.add(ticket);
         //add ticket no to map
         HashMap<String, Object> variables = new HashMap<>();
+
+
         //complete job send ticketNo
         variables.put("ticketNo", ticket.getTicketNo());
         client.newCompleteCommand(job.getKey())
@@ -53,17 +54,61 @@ public class Main {
                 }));
 
     }
-        // zeebe worker start
+
+    // zeebe worker start
     @ZeebeWorker(type = "DetermineSLA")
     public void DetermineSLA(final JobClient client, final ActivatedJob job) {
-        //
+        // //get variables as map
+        Map<String, Object> variablesAsMap = job.getVariablesAsMap();
+
+        // get ticketNo, effect and priority from map
+        String effect = (String) variablesAsMap.get("effect");
+        String priority = (String) variablesAsMap.get("priority");
+        int ticketNo = (int) variablesAsMap.get("ticketNo");
+        //create temp ticket and check changes
+        Ticket tempTicket = getTicket(ticketNo);
+
+
+        //ticket in array = temp ticket
+        if (ticketNo <= ticketArrayList.size()) {
+            ticketArrayList.set(ticketNo - 1, tempTicket);
+        } else {
+            System.out.println("The input ticket number is out of range");
+            return;  // Return from the method or handle this wrong input case accordingly.
+        }
+        //create SlaTimeCalc object
+        SlaTimeCalc timeCalc = new SlaTimeCalc(effect, priority);
+        //get times from Calc
+        tempTicket.setResponseTimeInDays(timeCalc.getResponseTime());
+        tempTicket.setResolutionTimeInDays(timeCalc.getResolutionTime());
+        //check for ticket updates
+        tempTicket.checkPriorityEffect(priority, effect);
+        //add ticket no to map
+        HashMap<String, Object> variables = new HashMap<>();
+        //complete job send ticketNo
+        variables.put("responseTime", tempTicket.getResponseTimeInDays());
+        variables.put("resolutionTime", tempTicket.getResolutionTimeInDays());
         // job complete
         client.newCompleteCommand(job.getKey())
+                .variables(variables)
                 .send()
                 .exceptionally((throwable -> {
                     throw new RuntimeException("Could not complete job", throwable);
                 }));
 
+    }
+
+    //get ticket
+    private Ticket getTicket(int ticketNo) {
+        //check if ticket exists
+        // Check if ticket exists before trying to get from list
+        if (ticketNo <= ticketArrayList.size()) {
+            return ticketArrayList.get(ticketNo - 1);
+        } else {
+            System.out.println("No such ticket exists in the list");
+            return null;
+            // check ticket priority and effect are not changed
+        }
     }
     // zeebe worker end
 
@@ -72,14 +117,12 @@ public class Main {
         // get variables as map
         Map<String, Object> variablesAsMap = job.getVariablesAsMap();
         // get ticket no as string
-        String ticketNoAsString = (String) variablesAsMap.get("ticketNo");
-        //Convert to int
-        int ticketNo = Integer.parseInt(ticketNoAsString);
+        int ticketNo = (int) variablesAsMap.get("ticketNo");
         //get ticket from array list (ticketNo - 1)
         Ticket tempTicket = ticketArrayList.get(ticketNo - 1);
         // ticket open = false
         tempTicket.setTicketOpen(false);
-        //ticket in arrray = temp ticket
+        //ticket in array = temp ticket
         ticketArrayList.set(ticketNo - 1, tempTicket);
         //print ticket closed
         System.out.print("ticket " + ticketNo + " closed");
