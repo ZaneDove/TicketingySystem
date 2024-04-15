@@ -52,12 +52,9 @@ public class Main {
 
         //complete job send ticketNo
         variables.put("ticketNo", ticket.getTicketNo());
-        client.newCompleteCommand(job.getKey())
-                .variables(variables)
-                .send()
-                .exceptionally((throwable -> {
-                    throw new RuntimeException("Could not complete job", throwable);
-                }));
+        client.newCompleteCommand(job.getKey()).variables(variables).send().exceptionally((throwable -> {
+            throw new RuntimeException("Could not complete job", throwable);
+        }));
 
     }
 
@@ -66,15 +63,12 @@ public class Main {
     public void DetermineSLA(final JobClient client, final ActivatedJob job) {
         // //get variables as map
         Map<String, Object> variablesAsMap = job.getVariablesAsMap();
-
         // get ticketNo, effect and priority from map
         String effect = (String) variablesAsMap.get("effect");
         String priority = (String) variablesAsMap.get("priority");
         int ticketNo = (int) variablesAsMap.get("ticketNo");
         //create temp ticket and check changes
         Ticket tempTicket = getTicket(ticketNo);
-
-
         //ticket in array = temp ticket
         if (ticketNo <= ticketArrayList.size()) {
             ticketArrayList.set(ticketNo - 1, tempTicket);
@@ -95,12 +89,9 @@ public class Main {
         variables.put("responseTime", tempTicket.getResponseTimeInDays());
         variables.put("resolutionTime", tempTicket.getResolutionTimeInDays());
         // job complete
-        client.newCompleteCommand(job.getKey())
-                .variables(variables)
-                .send()
-                .exceptionally((throwable -> {
-                    throw new RuntimeException("Could not complete job", throwable);
-                }));
+        client.newCompleteCommand(job.getKey()).variables(variables).send().exceptionally((throwable -> {
+            throw new RuntimeException("Could not complete job", throwable);
+        }));
 
     }
 
@@ -134,11 +125,9 @@ public class Main {
         //print ticket closed
         System.out.print("ticket " + ticketNo + " closed");
         //job complete
-        client.newCompleteCommand(job.getKey())
-                .send()
-                .exceptionally((throwable -> {
-                    throw new RuntimeException("Could not complete job", throwable);
-                }));
+        client.newCompleteCommand(job.getKey()).send().exceptionally((throwable -> {
+            throw new RuntimeException("Could not complete job", throwable);
+        }));
 
     }
 
@@ -156,38 +145,23 @@ public class Main {
                     }
                     """;
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://d910014c-53fc-4d7e-9f39-23947305ef2a.mock.pstmn.io/request-info"))
-                    .header("Content-Type", "application/json")
-                    .POST(BodyPublishers.ofString(requestBody))
-                    .build();
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://d910014c-53fc-4d7e-9f39-23947305ef2a.mock.pstmn.io/request-info")).header("Content-Type", "application/json").POST(BodyPublishers.ofString(requestBody)).build();
 
             HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
 
             if (response.statusCode() == 200) {
                 System.out.println("More information is provided");
                 // Assuming "success" is a variable in the BPMN model
-                jobClient.newCompleteCommand(job.getKey())
-                        .variables("{\"success\": true}")
-                        .send()
-                        .join();
+                jobClient.newCompleteCommand(job.getKey()).variables("{\"success\": true}").send().join();
             } else {
                 // Non-successful status code handling
                 System.out.println("Failed to send email. Status code: " + response.statusCode());
-                jobClient.newFailCommand(job.getKey())
-                        .retries(job.getRetries() - 1)
-                        .errorMessage("Failed to send email")
-                        .send()
-                        .join();
+                jobClient.newFailCommand(job.getKey()).retries(job.getRetries() - 1).errorMessage("Failed to send email").send().join();
             }
         } catch (Exception e) {
             e.printStackTrace();
             // Send a failure message back to the Zeebe engine
-            jobClient.newFailCommand(job.getKey())
-                    .retries(job.getRetries() - 1)
-                    .errorMessage("Exception occurred: " + e.getMessage())
-                    .send()
-                    .join();
+            jobClient.newFailCommand(job.getKey()).retries(job.getRetries() - 1).errorMessage("Exception occurred: " + e.getMessage()).send().join();
         }
     }
 
@@ -202,45 +176,25 @@ public class Main {
                     }
                     """;
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://d910014c-53fc-4d7e-9f39-23947305ef2a.mock.pstmn.io/submit-survey"))
-                    .header("Content-Type", "application/json")
-                    .POST(BodyPublishers.ofString(requestBody))
-                    .build();
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://d910014c-53fc-4d7e-9f39-23947305ef2a.mock.pstmn.io/submit-survey")).header("Content-Type", "application/json").POST(BodyPublishers.ofString(requestBody)).build();
 
             HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
 
             if (response.statusCode() == 200) {
                 System.out.println("Receipt of survey results");
                 // Assuming "success" is a variable in the BPMN model
-                jobClient.newCompleteCommand(job.getKey())
-                        .variables("{\"success\": true}")
-                        .send()
-                        .join();
+                jobClient.newCompleteCommand(job.getKey()).variables("{\"success\": true}").send().join();
             } else {
                 // Non-successful status code handling
                 System.out.println("Failed to send email. Status code: " + response.statusCode());
-                jobClient.newFailCommand(job.getKey())
-                        .retries(job.getRetries() - 1)
-                        .errorMessage("Failed to send email")
-                        .send()
-                        .join();
+                jobClient.newFailCommand(job.getKey()).retries(job.getRetries() - 1).errorMessage("Failed to send email").send().join();
             }
         } catch (Exception e) {
             e.printStackTrace();
             // Send a failure message back to the Zeebe engine
-            jobClient.newFailCommand(job.getKey())
-                    .retries(job.getRetries() - 1)
-                    .errorMessage("Exception occurred: " + e.getMessage())
-                    .send()
-                    .join();
+            jobClient.newFailCommand(job.getKey()).retries(job.getRetries() - 1).errorMessage("Exception occurred: " + e.getMessage()).send().join();
         }
     }
-
-
-
-
-
 
 
 }
