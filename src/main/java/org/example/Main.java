@@ -20,10 +20,13 @@ import java.util.Map;
 @EnableZeebeClient
 public class Main {
     ArrayList<Ticket> ticketArrayList = new ArrayList<Ticket>();
+    Ticket ticket;
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
     }
+
+    TicketServer ticketServer = new TicketServer();
 
     //open ticket worker
     @ZeebeWorker(type = "OpenTicket")
@@ -53,8 +56,7 @@ public class Main {
         int userID = user.getUserNo();
 
         //create new ticket in DB
-        Ticket ticket = new Ticket(isDevelopment,userID,ticketInfo,priority,effect,status,responseTimeInDays,resolutionTimeInDays,actualResolutionTime,loggedTime);
-        TicketServer ticketServer = new TicketServer();
+        ticket = new Ticket(isDevelopment,userID,ticketInfo,priority,effect,status,responseTimeInDays,resolutionTimeInDays,actualResolutionTime,loggedTime);
         ticketServer.insertTicket(ticket);
 
         System.out.println(isDevelopment+""+userID);
@@ -76,57 +78,38 @@ public class Main {
 
     }
 
-//    // zeebe worker start
-//    @ZeebeWorker(type = "DetermineSLA")
-//    public void DetermineSLA(final JobClient client, final ActivatedJob job) {
-//        // //get variables as map
-//        Map<String, Object> variablesAsMap = job.getVariablesAsMap();
-//
-//        //IT manager overwrites the user's selection
-//        String effect = null;
-//        String priority = null;
-//        if (variablesAsMap.get("effect_cover") == null ||variablesAsMap.get("priority_cover") == null) {
-//            effect = (String)variablesAsMap.get("effect");
-//            priority = (String)variablesAsMap.get("priority");
-//        }
-//        effect = (String) variablesAsMap.get("effect_cover");
-//        priority = (String)variablesAsMap.get("priority_cover");
-//
-//
-//
-//        int ticketNo = (int) variablesAsMap.get("ticketNo");
-//        //create temp ticket and check changes
-//        Ticket tempTicket = getTicket(ticketNo);
-//
-//
-//        //ticket in array = temp ticket
-//        if (ticketNo <= ticketArrayList.size()) {
-//            ticketArrayList.set(ticketNo - 1, tempTicket);
-//        } else {
-//            System.out.println("The input ticket number is out of range");
-//            return;  // Return from the method or handle this wrong input case accordingly.
-//        }
-//        //create SlaTimeCalc object
-//        SlaTimeCalc timeCalc = new SlaTimeCalc(effect, priority);
-//        //get times from Calc
-//        tempTicket.setResponseTimeInDays(timeCalc.getResponseTime());
-//        tempTicket.setResolutionTimeInDays(timeCalc.getResolutionTime());
-//        //check for ticket updates
-//        tempTicket.checkPriorityEffect(priority, effect);
-//        //add ticket no to map
-//        HashMap<String, Object> variables = new HashMap<>();
-//        //complete job send ticketNo
-//        variables.put("responseTime", tempTicket.getResponseTimeInDays());
-//        variables.put("resolutionTime", tempTicket.getResolutionTimeInDays());
-//        // job complete
-//        client.newCompleteCommand(job.getKey())
-//                .variables(variables)
-//                .send()
-//                .exceptionally((throwable -> {
-//                    throw new RuntimeException("Could not complete job", throwable);
-//                }));
-//
-//    }
+    // zeebe worker start
+    @ZeebeWorker(type = "DetermineSLA")
+    public void DetermineSLA(final JobClient client, final ActivatedJob job) {
+        // //get variables as map
+        Map<String, Object> variablesAsMap = job.getVariablesAsMap();
+
+        //IT manager overwrites the user's selection
+        String effect = null;
+        String priority = null;
+
+        if (variablesAsMap.get("check_PandE").equals(false)) {
+            effect = (String)variablesAsMap.get("effect");
+            priority = (String)variablesAsMap.get("priority");
+        }
+        effect = (String) variablesAsMap.get("effect_cover");
+        priority = (String)variablesAsMap.get("priority_cover");
+
+        int TicketNo = ticket.getTicketNo();
+        ticketServer.updateTicketPriorityAndEffect(TicketNo,priority,effect);
+
+        //add ticket no to map
+        HashMap<String, Object> variables = new HashMap<>();
+
+        // job complete
+        client.newCompleteCommand(job.getKey())
+                .variables(variables)
+                .send()
+                .exceptionally((throwable -> {
+                    throw new RuntimeException("Could not complete job", throwable);
+                }));
+
+    }
 //
 //    //get ticket
 //    //use newTicket name = getTicket(ticket number); to find ticket from array

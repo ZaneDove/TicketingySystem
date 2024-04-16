@@ -50,7 +50,28 @@ public class Ticket {
         this.loggedTime = loggedTime;
     }
 
-    // Getters (no setters for ticketNo and startTime)
+    //update priority and effect
+    public void checkPriorityEffect(String newPriority, String NewEffect) {
+        boolean priorityCheck = this.priority != null && this.priority.equals(newPriority);
+        boolean effectCheck = this.effect != null && this.effect.equals(NewEffect);
+
+        if (!priorityCheck && !effectCheck) {
+            System.out.println(ticketNo + " has been updated");
+            this.priority = newPriority;
+            this.effect = NewEffect;
+        } else if (!priorityCheck) {
+            System.out.println(ticketNo + " has been updated");
+            this.priority = newPriority;
+        } else if (!effectCheck) {
+            System.out.println(ticketNo + " has been updated");
+            this.effect = NewEffect;
+        }
+    }
+
+    public void setTicketNo(int ticketNo) {
+        this.ticketNo = ticketNo;
+    }
+
     public int getTicketNo() {
         return ticketNo;
     }
