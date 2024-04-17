@@ -7,11 +7,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="241b92d9-7451-435d-bbcf-40e6a9811fe7" name="Changes" comment="The database is connected and created">
+    <list default="true" id="241b92d9-7451-435d-bbcf-40e6a9811fe7" name="Changes" comment="Implementation of SLA function and manager updates effect and priority">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Ticket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Ticket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/TicketServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/TicketServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/MySQLConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Controller/MySQLConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Ticket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Model/Ticket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/TicketServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Controller/TicketServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/UserServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Controller/UserServer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +90,7 @@
       <module name="TicketingySystem" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.*" />
+          <option name="PATTERN" value="org.example.Model.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -96,11 +99,11 @@
       </method>
     </configuration>
     <configuration name="MySQLConnection" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.example.MySQLConnection" />
+      <option name="MAIN_CLASS_NAME" value="org.example.Controller.MySQLConnection" />
       <module name="TicketingySystem" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.*" />
+          <option name="PATTERN" value="org.example.Model.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -211,7 +214,14 @@
       <option name="project" value="LOCAL" />
       <updated>1713296643699</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Implementation of SLA function and manager updates effect and priority">
+      <created>1713300132348</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1713300132348</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -234,6 +244,7 @@
     <MESSAGE value="Solves the problem of IT manager's priority and effect coverage for users" />
     <MESSAGE value="Solves again the problem of IT manager's priority and effect coverage for users" />
     <MESSAGE value="The database is connected and created" />
-    <option name="LAST_COMMIT_MESSAGE" value="The database is connected and created" />
+    <MESSAGE value="Implementation of SLA function and manager updates effect and priority" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implementation of SLA function and manager updates effect and priority" />
   </component>
 </project>

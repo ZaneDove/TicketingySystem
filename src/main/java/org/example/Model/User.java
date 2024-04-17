@@ -1,4 +1,4 @@
-package org.example;
+package org.example.Model;
 
 public class User {
     private int userNo; // This will be set by the database automatically

@@ -4,6 +4,10 @@ import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.client.api.worker.JobClient;
 import io.camunda.zeebe.spring.client.EnableZeebeClient;
 import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
+import org.example.Controller.TicketServer;
+import org.example.Controller.UserServer;
+import org.example.Model.Ticket;
+import org.example.Model.User;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -48,6 +52,7 @@ public class Main {
         int resolutionTimeInDays = 0;
         Time actualResolutionTime = null;
         Time loggedTime = null;
+        String ITMenber = null;
 
         //create User in DB
         User user = new User(name,email);
@@ -56,7 +61,7 @@ public class Main {
         int userID = user.getUserNo();
 
         //create new ticket in DB
-        ticket = new Ticket(isDevelopment,userID,ticketInfo,priority,effect,status,responseTimeInDays,resolutionTimeInDays,actualResolutionTime,loggedTime);
+        ticket = new Ticket(isDevelopment,userID,ticketInfo,priority,effect,status,responseTimeInDays,resolutionTimeInDays,actualResolutionTime,loggedTime,ITMenber);
         ticketServer.insertTicket(ticket);
 
         System.out.println(isDevelopment+""+userID);
@@ -94,9 +99,10 @@ public class Main {
         }
         effect = (String) variablesAsMap.get("effect_cover");
         priority = (String)variablesAsMap.get("priority_cover");
+        String member = (String)variablesAsMap.get("ITMenber");
 
         int TicketNo = ticket.getTicketNo();
-        ticketServer.updateTicketPriorityAndEffect(TicketNo,priority,effect);
+        ticketServer.updateTicketPriorityAndEffect(TicketNo,priority,effect,member);
 
         //add ticket no to map
         HashMap<String, Object> variables = new HashMap<>();
@@ -110,7 +116,7 @@ public class Main {
                 }));
 
     }
-//
+
 //    //get ticket
 //    //use newTicket name = getTicket(ticket number); to find ticket from array
 //    private Ticket getTicket(int ticketNo) {
@@ -149,100 +155,100 @@ public class Main {
 //
 //    }
 //
-//
-//    private final HttpClient httpClient = HttpClient.newHttpClient();
-//
-//    @ZeebeWorker(type = "AskMoreInfo")
-//    public void askMoreInfo(final JobClient jobClient, final ActivatedJob job) {
-//        try {
-//            String requestBody = """
-//                    {
-//                      "to": "user@example.com",
-//                      "subject": "Test Email",
-//                      "body": "This is a test email to demonstrate the process."
-//                    }
-//                    """;
-//
-//            HttpRequest request = HttpRequest.newBuilder()
-//                    .uri(URI.create("https://d910014c-53fc-4d7e-9f39-23947305ef2a.mock.pstmn.io/request-info"))
-//                    .header("Content-Type", "application/json")
-//                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-//                    .build();
-//
-//            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-//
-//            if (response.statusCode() == 200) {
-//                System.out.println("More information is provided");
-//                // Assuming "success" is a variable in the BPMN model
-//                jobClient.newCompleteCommand(job.getKey())
-//                        .variables("{\"success\": true}")
-//                        .send()
-//                        .join();
-//            } else {
-//                // Non-successful status code handling
-//                System.out.println("Failed to send email. Status code: " + response.statusCode());
-//                jobClient.newFailCommand(job.getKey())
-//                        .retries(job.getRetries() - 1)
-//                        .errorMessage("Failed to send email")
-//                        .send()
-//                        .join();
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            // Send a failure message back to the Zeebe engine
-//            jobClient.newFailCommand(job.getKey())
-//                    .retries(job.getRetries() - 1)
-//                    .errorMessage("Exception occurred: " + e.getMessage())
-//                    .send()
-//                    .join();
-//        }
-//    }
-//
-//    @ZeebeWorker(type = "SentServey")
-//    public void SentServey(final JobClient jobClient, final ActivatedJob job) {
-//        try {
-//            String requestBody = """
-//                    {
-//                      "to": "user@example.com",
-//                      "subject": "Test Email",
-//                      "body": "This is a test email to demonstrate the process."
-//                    }
-//                    """;
-//
-//            HttpRequest request = HttpRequest.newBuilder()
-//                    .uri(URI.create("https://d910014c-53fc-4d7e-9f39-23947305ef2a.mock.pstmn.io/submit-survey"))
-//                    .header("Content-Type", "application/json")
-//                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-//                    .build();
-//
-//            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-//
-//            if (response.statusCode() == 200) {
-//                System.out.println("Receipt of survey results");
-//                // Assuming "success" is a variable in the BPMN model
-//                jobClient.newCompleteCommand(job.getKey())
-//                        .variables("{\"success\": true}")
-//                        .send()
-//                        .join();
-//            } else {
-//                // Non-successful status code handling
-//                System.out.println("Failed to send email. Status code: " + response.statusCode());
-//                jobClient.newFailCommand(job.getKey())
-//                        .retries(job.getRetries() - 1)
-//                        .errorMessage("Failed to send email")
-//                        .send()
-//                        .join();
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            // Send a failure message back to the Zeebe engine
-//            jobClient.newFailCommand(job.getKey())
-//                    .retries(job.getRetries() - 1)
-//                    .errorMessage("Exception occurred: " + e.getMessage())
-//                    .send()
-//                    .join();
-//        }
-//    }
+
+    private final HttpClient httpClient = HttpClient.newHttpClient();
+
+    @ZeebeWorker(type = "AskMoreInfo")
+    public void askMoreInfo(final JobClient jobClient, final ActivatedJob job) {
+        try {
+            String requestBody = """
+                    {
+                      "to": "user@example.com",
+                      "subject": "Test Email",
+                      "body": "This is a test email to demonstrate the process."
+                    }
+                    """;
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://d910014c-53fc-4d7e-9f39-23947305ef2a.mock.pstmn.io/request-info"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                System.out.println("More information is provided");
+                // Assuming "success" is a variable in the BPMN model
+                jobClient.newCompleteCommand(job.getKey())
+                        .variables("{\"success\": true}")
+                        .send()
+                        .join();
+            } else {
+                // Non-successful status code handling
+                System.out.println("Failed to send email. Status code: " + response.statusCode());
+                jobClient.newFailCommand(job.getKey())
+                        .retries(job.getRetries() - 1)
+                        .errorMessage("Failed to send email")
+                        .send()
+                        .join();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Send a failure message back to the Zeebe engine
+            jobClient.newFailCommand(job.getKey())
+                    .retries(job.getRetries() - 1)
+                    .errorMessage("Exception occurred: " + e.getMessage())
+                    .send()
+                    .join();
+        }
+    }
+
+    @ZeebeWorker(type = "SentServey")
+    public void SentServey(final JobClient jobClient, final ActivatedJob job) {
+        try {
+            String requestBody = """
+                    {
+                      "to": "user@example.com",
+                      "subject": "Test Email",
+                      "body": "This is a test email to demonstrate the process."
+                    }
+                    """;
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://d910014c-53fc-4d7e-9f39-23947305ef2a.mock.pstmn.io/submit-survey"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                System.out.println("Receipt of survey results");
+                // Assuming "success" is a variable in the BPMN model
+                jobClient.newCompleteCommand(job.getKey())
+                        .variables("{\"success\": true}")
+                        .send()
+                        .join();
+            } else {
+                // Non-successful status code handling
+                System.out.println("Failed to send email. Status code: " + response.statusCode());
+                jobClient.newFailCommand(job.getKey())
+                        .retries(job.getRetries() - 1)
+                        .errorMessage("Failed to send email")
+                        .send()
+                        .join();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Send a failure message back to the Zeebe engine
+            jobClient.newFailCommand(job.getKey())
+                    .retries(job.getRetries() - 1)
+                    .errorMessage("Exception occurred: " + e.getMessage())
+                    .send()
+                    .join();
+        }
+    }
 
 
 }

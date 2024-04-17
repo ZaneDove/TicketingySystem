@@ -1,4 +1,4 @@
-package org.example;
+package org.example.Model;
 
 import java.sql.Time;
 import java.time.LocalDateTime;
@@ -23,6 +23,8 @@ public class Ticket {
     // Ticket Status
     String status;
 
+    String ITMenber;
+
     // Ticket Open time set automatically to current time
     LocalDateTime startTime = LocalDateTime.now();
 
@@ -37,7 +39,7 @@ public class Ticket {
     Time loggedTime;
 
     // Constructor without ticketNo and startTime as these are managed by the database/system
-    public Ticket(Boolean isDevelopment, int userID, String ticketInfo, String priority, String effect, String status, int responseTimeInDays, int resolutionTimeInDays, Time actualResolutionTime, Time loggedTime) {
+    public Ticket(Boolean isDevelopment, int userID, String ticketInfo, String priority, String effect, String status, int responseTimeInDays, int resolutionTimeInDays, Time actualResolutionTime, Time loggedTime,String ITMenber) {
         this.isDevelopment = isDevelopment;
         this.userID = userID;
         this.ticketInfo = ticketInfo;
@@ -48,6 +50,7 @@ public class Ticket {
         this.resolutionTimeInDays = resolutionTimeInDays;
         this.actualResolutionTime = actualResolutionTime;
         this.loggedTime = loggedTime;
+        this.ITMenber = ITMenber;
     }
 
     //update priority and effect
@@ -66,6 +69,14 @@ public class Ticket {
             System.out.println(ticketNo + " has been updated");
             this.effect = NewEffect;
         }
+    }
+
+    public String getITMenber() {
+        return ITMenber;
+    }
+
+    public void setITMenber(String ITMenber) {
+        this.ITMenber = ITMenber;
     }
 
     public void setTicketNo(int ticketNo) {
