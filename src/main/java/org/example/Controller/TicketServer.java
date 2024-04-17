@@ -108,6 +108,27 @@ public class TicketServer {
         };
     }
 
+    /**
+     * Updates the status of an existing ticket in the database to "Completed".
+     * @param ticketNo The ID of the ticket to update.
+     */
+    public void markTicketAsCompleted(int ticketNo) {
+        String sql = "UPDATE Ticket SET status = 'Completed' WHERE ticketNo = ?";
+
+        try (Connection connection = MySQLConnection.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, ticketNo);
+
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("Ticket " + ticketNo + " was successfully marked as Completed.");
+            } else {
+                System.out.println("No ticket was updated, check the ticket number.");
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Failed to update the ticket status: " + e.getMessage());
+        }
+    }
 
 
 
