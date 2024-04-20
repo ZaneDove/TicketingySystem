@@ -7,7 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="241b92d9-7451-435d-bbcf-40e6a9811fe7" name="Changes" comment="Implementation of ITmenber work assignment">
+    <list default="true" id="241b92d9-7451-435d-bbcf-40e6a9811fe7" name="Changes" comment="The state transition of the ticket is completed, converted it to the completed state">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Controller/TicketServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Controller/TicketServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
@@ -80,7 +80,7 @@
       <recent name="C:\Users\44771\Desktop\Whos50GameCamunda8-main\TicketingySystem\src\main\resources" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunManager" selected="Spring Boot.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.example.Main" />
       <module name="TicketingySystem" />
@@ -122,8 +122,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Main" />
         <item itemvalue="Spring Boot.Main" />
+        <item itemvalue="Application.Main" />
         <item itemvalue="Application.MySQLConnection" />
       </list>
     </recent_temporary>
@@ -149,6 +149,7 @@
       <workItem from="1710516816838" duration="1423000" />
       <workItem from="1711038862374" duration="5446000" />
       <workItem from="1713221686390" duration="2030000" />
+      <workItem from="1713619559267" duration="6078000" />
     </task>
     <task id="LOCAL-00001" summary="Java for workers">
       <option name="closed" value="true" />
@@ -224,7 +225,14 @@
       <option name="project" value="LOCAL" />
       <updated>1713358487748</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="The state transition of the ticket is completed, converted it to the completed state">
+      <created>1713360991754</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1713360991754</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -235,7 +243,13 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="true" />
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -249,6 +263,7 @@
     <MESSAGE value="The database is connected and created" />
     <MESSAGE value="Implementation of SLA function and manager updates effect and priority" />
     <MESSAGE value="Implementation of ITmenber work assignment" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implementation of ITmenber work assignment" />
+    <MESSAGE value="The state transition of the ticket is completed, converted it to the completed state" />
+    <option name="LAST_COMMIT_MESSAGE" value="The state transition of the ticket is completed, converted it to the completed state" />
   </component>
 </project>

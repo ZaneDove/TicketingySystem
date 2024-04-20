@@ -16,9 +16,16 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+
+
 
 @SpringBootApplication
 @EnableZeebeClient
@@ -32,7 +39,7 @@ public class Main {
 
     TicketServer ticketServer = new TicketServer();
 
-    //open ticket worker
+    //Open ticket
     @ZeebeWorker(type = "OpenTicket")
     public void OpenTicket(final JobClient client, final ActivatedJob job) {
         //get variables as map
@@ -83,22 +90,15 @@ public class Main {
 
     }
 
-    // zeebe worker start
+    //Determine SLA
     @ZeebeWorker(type = "DetermineSLA")
     public void DetermineSLA(final JobClient client, final ActivatedJob job) {
         // //get variables as map
         Map<String, Object> variablesAsMap = job.getVariablesAsMap();
 
         //IT manager overwrites the user's selection
-        String effect = null;
-        String priority = null;
-
-        if (variablesAsMap.get("check_PandE").equals(false)) {
-            effect = (String)variablesAsMap.get("effect");
-            priority = (String)variablesAsMap.get("priority");
-        }
-        effect = (String) variablesAsMap.get("effect_cover");
-        priority = (String)variablesAsMap.get("priority_cover");
+        String effect = (String) variablesAsMap.get("effect");
+        String priority = (String)variablesAsMap.get("priority");
         String member = (String)variablesAsMap.get("ITMenber");
 
         int TicketNo = ticket.getTicketNo();
@@ -117,47 +117,26 @@ public class Main {
 
     }
 
-//    //get ticket
-//    //use newTicket name = getTicket(ticket number); to find ticket from array
-//    private Ticket getTicket(int ticketNo) {
-//        //check if ticket exists
-//        // Check if ticket exists before trying to get from list
-//        if (ticketNo <= ticketArrayList.size()) {
-//            return ticketArrayList.get(ticketNo - 1);
-//        } else {
-//            System.out.println("No such ticket exists in the list");
-//            return null;
-//            // check ticket priority and effect are not changed
-//        }
-//    }
-//
-//
-//    @ZeebeWorker(type = "closeTicket")
-//    public void closeTicket(final JobClient client, final ActivatedJob job) {
-//        // get variables as map
-//        Map<String, Object> variablesAsMap = job.getVariablesAsMap();
-//        // get ticket no as string
-//        int ticketNo = (int) variablesAsMap.get("ticketNo");
-//        //get ticket from array list (ticketNo - 1)
-//        Ticket tempTicket = ticketArrayList.get(ticketNo - 1);
-//        // ticket open = false
-//        tempTicket.setTicketOpen(false);
-//        //ticket in array = temp ticket
-//        ticketArrayList.set(ticketNo - 1, tempTicket);
-//        //print ticket closed
-//        System.out.print("ticket " + ticketNo + " closed");
-//        //job complete
-//        client.newCompleteCommand(job.getKey())
-//                .send()
-//                .exceptionally((throwable -> {
-//                    throw new RuntimeException("Could not complete job", throwable);
-//                }));
-//
-//    }
-//
+    @ZeebeWorker(type = "ChangeOpenTicket")
+    public void ChangeOpenTicket(final JobClient client, final ActivatedJob job){
+        int TicketNo = ticket.getTicketNo();
+        ticketServer.markTicketAsOpen(TicketNo);
 
+        //add ticket no to map
+        HashMap<String, Object> variables = new HashMap<>();
+
+        // job complete
+        client.newCompleteCommand(job.getKey())
+                .variables(variables)
+                .send()
+                .exceptionally((throwable -> {
+                    throw new RuntimeException("Could not complete job", throwable);
+                }));
+
+    }
+
+    //Sending fake email use postman
     private final HttpClient httpClient = HttpClient.newHttpClient();
-
     @ZeebeWorker(type = "AskMoreInfo")
     public void askMoreInfo(final JobClient jobClient, final ActivatedJob job) {
         try {
@@ -203,7 +182,6 @@ public class Main {
                     .join();
         }
     }
-
 
     @ZeebeWorker(type = "CompletedTicket")
     public void CompletedTicket(final JobClient jobClient, final ActivatedJob job){
@@ -256,10 +234,23 @@ public class Main {
 
     }
 
-
-
     @ZeebeWorker(type = "SentServey")
     public void SentServey(final JobClient jobClient, final ActivatedJob job) {
+        //get variables as map
+        Map<String, Object> variablesAsMap = job.getVariablesAsMap();
+
+        int TicketNO = ticket.getTicketNo();
+        String datetime = (String) variablesAsMap.get("actualResolutionTime");
+
+        // Assuming the datetime string is in the format "yyyy-MM-dd" since it's just a date
+        LocalDate date = LocalDate.parse(datetime, DateTimeFormatter.ISO_LOCAL_DATE);
+
+        // Correct way to convert LocalDate to java.sql.Date
+        Date actualResolutionTime = Date.valueOf(date);
+        int loggedTime = (int) variablesAsMap.get("loggedTime");
+
+        ticketServer.setFinishTimes(TicketNO,actualResolutionTime,loggedTime);
+
         try {
             String requestBody = """
                     {
@@ -304,5 +295,47 @@ public class Main {
         }
     }
 
+    @ZeebeWorker(type = "MoreInfoStroeDB")
+    public void MoreInfoStroeDB(final JobClient client, final ActivatedJob job){
+        int TicketNo = ticket.getTicketNo();
+
+        Map<String, Object> variablesAsMap = job.getVariablesAsMap();
+        String issueDescription = (String) variablesAsMap.get("issueDescription");
+        String moreInfo = (String) variablesAsMap.get("MoreInfo");
+
+        ticketServer.appendToTicketInfo(TicketNo,moreInfo);
+
+        //add ticket no to map
+        HashMap<String, Object> variables = new HashMap<>();
+        variables.put("issueDescription",issueDescription+"//  provide more information: "+moreInfo);
+
+        // job complete
+        client.newCompleteCommand(job.getKey())
+                .variables(variables)
+                .send()
+                .exceptionally((throwable -> {
+                    throw new RuntimeException("Could not complete job", throwable);
+                }));
+
+
+    }
+
+    @ZeebeWorker(type = "closeTicket")
+    public void closeTicket(final JobClient client, final ActivatedJob job){
+        int TicketNo = ticket.getTicketNo();
+        ticketServer.CloseTicket(TicketNo);
+
+        //add ticket no to map
+        HashMap<String, Object> variables = new HashMap<>();
+
+        // job complete
+        client.newCompleteCommand(job.getKey())
+                .variables(variables)
+                .send()
+                .exceptionally((throwable -> {
+                    throw new RuntimeException("Could not complete job", throwable);
+                }));
+
+    }
 
 }
