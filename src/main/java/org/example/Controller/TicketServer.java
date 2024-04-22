@@ -233,8 +233,6 @@ public class TicketServer {
         }
     }
 
-
-
     /**
      * Updates the status of an existing ticket in the database to "Close".
      * @param ticketNo The ID of the ticket to update.

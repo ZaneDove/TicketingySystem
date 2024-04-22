@@ -7,10 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="241b92d9-7451-435d-bbcf-40e6a9811fe7" name="Changes" comment="The state transition of the ticket is completed, converted it to the completed state">
+    <list default="true" id="241b92d9-7451-435d-bbcf-40e6a9811fe7" name="Changes" comment="Completed IT menber's working hours statistics and the closing of bills">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Controller/MySQLConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Controller/MySQLConnection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Controller/TicketServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Controller/TicketServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +34,32 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <excluded-from-favorite>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="master" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </excluded-from-favorite>
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="branch1" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
         <entry key="$PROJECT_DIR$" value="master" />
@@ -149,7 +175,8 @@
       <workItem from="1710516816838" duration="1423000" />
       <workItem from="1711038862374" duration="5446000" />
       <workItem from="1713221686390" duration="2030000" />
-      <workItem from="1713619559267" duration="6078000" />
+      <workItem from="1713619559267" duration="7529000" />
+      <workItem from="1713793827316" duration="2551000" />
     </task>
     <task id="LOCAL-00001" summary="Java for workers">
       <option name="closed" value="true" />
@@ -232,7 +259,14 @@
       <option name="project" value="LOCAL" />
       <updated>1713360991754</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Completed IT menber's working hours statistics and the closing of bills">
+      <created>1713626430528</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1713626430528</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -264,6 +298,7 @@
     <MESSAGE value="Implementation of SLA function and manager updates effect and priority" />
     <MESSAGE value="Implementation of ITmenber work assignment" />
     <MESSAGE value="The state transition of the ticket is completed, converted it to the completed state" />
-    <option name="LAST_COMMIT_MESSAGE" value="The state transition of the ticket is completed, converted it to the completed state" />
+    <MESSAGE value="Completed IT menber's working hours statistics and the closing of bills" />
+    <option name="LAST_COMMIT_MESSAGE" value="Completed IT menber's working hours statistics and the closing of bills" />
   </component>
 </project>
