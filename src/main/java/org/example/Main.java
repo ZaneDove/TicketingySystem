@@ -50,7 +50,6 @@ public class Main {
         String email = (String) variablesAsMap.get("email");
 
         //get Ticket parameter
-        Boolean isDevelopment = (Boolean) variablesAsMap.get("isDevelopment");
         String ticketInfo = (String) variablesAsMap.get("issueDescription");
         String priority = (String) variablesAsMap.get("priority");
         String effect = (String) variablesAsMap.get("effect");
@@ -68,10 +67,8 @@ public class Main {
         int userID = user.getUserNo();
 
         //create new ticket in DB
-        ticket = new Ticket(isDevelopment,userID,ticketInfo,priority,effect,status,responseTimeInDays,resolutionTimeInDays,actualResolutionTime,loggedTime,ITMenber);
+        ticket = new Ticket(userID,ticketInfo,priority,effect,status,responseTimeInDays,resolutionTimeInDays,actualResolutionTime,loggedTime,ITMenber);
         ticketServer.insertTicket(ticket);
-
-        System.out.println(isDevelopment+""+userID);
 
         //add ticket no to map
         HashMap<String, Object> variables = new HashMap<>();
@@ -100,9 +97,10 @@ public class Main {
         String effect = (String) variablesAsMap.get("effect");
         String priority = (String)variablesAsMap.get("priority");
         String member = (String)variablesAsMap.get("ITMenber");
+        Boolean isDevelopment = (Boolean) variablesAsMap.get("isDevelopment");
 
         int TicketNo = ticket.getTicketNo();
-        ticketServer.updateTicketPriorityAndEffect(TicketNo,priority,effect,member);
+        ticketServer.updateTicketPriorityAndEffect(TicketNo,priority,effect,member,isDevelopment);
 
         //add ticket no to map
         HashMap<String, Object> variables = new HashMap<>();

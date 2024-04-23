@@ -39,8 +39,7 @@ public class Ticket {
     Time loggedTime;
 
     // Constructor without ticketNo and startTime as these are managed by the database/system
-    public Ticket(Boolean isDevelopment, int userID, String ticketInfo, String priority, String effect, String status, int responseTimeInDays, int resolutionTimeInDays, Time actualResolutionTime, Time loggedTime,String ITMenber) {
-        this.isDevelopment = isDevelopment;
+    public Ticket(int userID, String ticketInfo, String priority, String effect, String status, int responseTimeInDays, int resolutionTimeInDays, Time actualResolutionTime, Time loggedTime,String ITMenber) {
         this.userID = userID;
         this.ticketInfo = ticketInfo;
         this.priority = priority;

@@ -11,22 +11,21 @@ public class TicketServer {
      * @param ticket Ticket object
      */
     public void insertTicket(Ticket ticket) {
-        String sql = "INSERT INTO Ticket (isDevelopment, userID, ticketInfo, priority, effect, status, responseTimeInDays, resolutionTimeInDays, actualResolutionTime, loggedTime,ITMenber) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+        String sql = "INSERT INTO Ticket (userID, ticketInfo, priority, effect, status, responseTimeInDays, resolutionTimeInDays, actualResolutionTime, loggedTime,ITMenber) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
 
         try (Connection connection = MySQLConnection.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            pstmt.setBoolean(1, ticket.getDevelopment());
-            pstmt.setInt(2, ticket.getUserID());
-            pstmt.setString(3, ticket.getTicketInfo());
-            pstmt.setString(4, ticket.getPriority());
-            pstmt.setString(5, ticket.getEffect());
-            pstmt.setString(6, ticket.getStatus());
-            pstmt.setInt(7, ticket.getResponseTimeInDays());
-            pstmt.setInt(8, ticket.getResolutionTimeInDays());
-            pstmt.setTime(9, ticket.getActualResolutionTime());
-            pstmt.setTime(10, ticket.getLoggedTime());
-            pstmt.setString(11, ticket.getITMenber());
+            pstmt.setInt(1, ticket.getUserID());
+            pstmt.setString(2, ticket.getTicketInfo());
+            pstmt.setString(3, ticket.getPriority());
+            pstmt.setString(4, ticket.getEffect());
+            pstmt.setString(5, ticket.getStatus());
+            pstmt.setInt(6, ticket.getResponseTimeInDays());
+            pstmt.setInt(7, ticket.getResolutionTimeInDays());
+            pstmt.setTime(8, ticket.getActualResolutionTime());
+            pstmt.setTime(9, ticket.getLoggedTime());
+            pstmt.setString(10, ticket.getITMenber());
 
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows == 0) {
@@ -52,11 +51,11 @@ public class TicketServer {
      * @param newEffect The new effect to set.
      * @param ITMenber The new effect to set.
      */
-    public void updateTicketPriorityAndEffect(int ticketNo, String newPriority, String newEffect, String ITMenber) {
+    public void updateTicketPriorityAndEffect(int ticketNo, String newPriority, String newEffect, String ITMenber,boolean isDevelopment) {
         int responseTimeInDays = calculateResponseTime(newEffect, newPriority);
         int resolutionTimeInDays = calculateResolutionTime(newEffect, newPriority);
 
-        String sql = "UPDATE Ticket SET priority = ?, effect = ?, responseTimeInDays = ?, resolutionTimeInDays = ?, ITMenber = ? WHERE ticketNo = ?";
+        String sql = "UPDATE Ticket SET priority = ?, effect = ?, responseTimeInDays = ?, resolutionTimeInDays = ?, ITMenber = ?, isDevelopment = ? WHERE ticketNo = ?";
 
         try (Connection connection = MySQLConnection.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -65,7 +64,9 @@ public class TicketServer {
             pstmt.setInt(3, responseTimeInDays);
             pstmt.setInt(4, resolutionTimeInDays);
             pstmt.setString(5, ITMenber);
-            pstmt.setInt(6, ticketNo);
+            pstmt.setBoolean(6,isDevelopment);
+            pstmt.setInt(7, ticketNo);
+
 
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
