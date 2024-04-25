@@ -1,0 +1,154 @@
+{
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.4.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "74f048e"
+  },
+  "schemaVersion": 15,
+  "id": "confirm-the-priority-of-the-ticket-and-assigns-ticket-08hmnrr",
+  "components": [
+    {
+      "text": "### IT issue report form",
+      "type": "text",
+      "id": "Heading_0",
+      "layout": {
+        "row": "row_0",
+        "columns": null
+      }
+    },
+    {
+      "text": "##### reporter information section",
+      "type": "text",
+      "id": "Subheading_1",
+      "layout": {
+        "row": "row_1",
+        "columns": null
+      }
+    },
+    {
+      "type": "textfield",
+      "id": "Textfield_2",
+      "label": "Employee name",
+      "validate": {
+        "minLength": 2,
+        "required": true
+      },
+      "key": "reporterName",
+      "layout": {
+        "row": "row_2",
+        "columns": null
+      },
+      "description": "Enter employee name"
+    },
+    {
+      "subtype": "date",
+      "dateLabel": "Date Issue Occurred",
+      "type": "datetime",
+      "id": "Date_10",
+      "validate": {
+        "required": true
+      },
+      "key": "dateIssueOccurred",
+      "layout": {
+        "row": "row_3",
+        "columns": null
+      }
+    },
+    {
+      "text": "##### issue details section",
+      "type": "text",
+      "id": "Subheading_5",
+      "layout": {
+        "row": "row_4",
+        "columns": null
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "Textarea_6",
+      "label": "Description of the Issue",
+      "validate": {
+        "minLength": 10,
+        "maxLength": 500,
+        "required": true
+      },
+      "key": "issueDescription",
+      "layout": {
+        "row": "Row_0m85ioz",
+        "columns": null
+      }
+    },
+    {
+      "text": "##### Effect",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_15uecw7",
+        "columns": null
+      },
+      "id": "Field_0trdyxv"
+    },
+    {
+      "text": "##### Priority",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_15uecw7",
+        "columns": null
+      },
+      "id": "Field_1e9n71h"
+    },
+    {
+      "values": [
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Low",
+          "value": "low"
+        },
+        {
+          "label": "High",
+          "value": "high"
+        }
+      ],
+      "label": "effect",
+      "type": "select",
+      "layout": {
+        "row": "Row_1pk235i",
+        "columns": null
+      },
+      "id": "Field_1yws1jf",
+      "key": "select_xkriz5",
+      "defaultValue": "<none>"
+    },
+    {
+      "values": [
+        {
+          "label": "Low",
+          "value": "low"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "High",
+          "value": "high"
+        }
+      ],
+      "label": "priority",
+      "type": "select",
+      "layout": {
+        "row": "Row_1pk235i",
+        "columns": null
+      },
+      "id": "Field_1bbdioq",
+      "key": "select_xuh0fo"
+    }
+  ],
+  "generated": true,
+  "type": "default"
+}

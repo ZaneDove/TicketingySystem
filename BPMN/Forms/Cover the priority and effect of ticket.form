@@ -1,0 +1,179 @@
+{
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.4.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "dfa4d1c"
+  },
+  "schemaVersion": 16,
+  "id": "cover-the-priority-and-effect-of-ticket-1aefsd1",
+  "components": [
+    {
+      "text": "#### User message",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_08o908g",
+        "columns": null
+      },
+      "id": "Field_0xonw6r"
+    },
+    {
+      "label": "User Name",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0y1hirr",
+        "columns": null
+      },
+      "id": "Field_1rz78r4",
+      "key": "name",
+      "readonly": true
+    },
+    {
+      "label": "Ticket Number",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0y1hirr",
+        "columns": null
+      },
+      "id": "Field_1gr3l95",
+      "key": "ticketNo",
+      "readonly": true
+    },
+    {
+      "label": "User Email",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1fx49q8",
+        "columns": null
+      },
+      "id": "Field_12tth2q",
+      "key": "email",
+      "readonly": true
+    },
+    {
+      "label": "Description of the Issue",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_06rm5dy",
+        "columns": null
+      },
+      "id": "Field_0iwy005",
+      "key": "issueDescription",
+      "readonly": true
+    },
+    {
+      "text": "#### Issue Type",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_0jscyx3",
+        "columns": null
+      },
+      "id": "Field_1stg222"
+    },
+    {
+      "label": "is there a development issue?",
+      "type": "checkbox",
+      "layout": {
+        "row": "Row_05metox",
+        "columns": null
+      },
+      "id": "Field_1ge4aem",
+      "key": "isDevelopment"
+    },
+    {
+      "text": "#### Re-select effect and priorities(selectable)",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_0sx0uwz",
+        "columns": null
+      },
+      "id": "Field_1weeofl"
+    },
+    {
+      "values": [
+        {
+          "label": "Low",
+          "value": "low"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "High",
+          "value": "high"
+        }
+      ],
+      "label": "effect",
+      "type": "select",
+      "layout": {
+        "row": "Row_18vpovu",
+        "columns": null
+      },
+      "id": "Field_1sawk2o",
+      "key": "effect"
+    },
+    {
+      "values": [
+        {
+          "label": "Low",
+          "value": "low"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "High",
+          "value": "high"
+        }
+      ],
+      "label": "Priority ",
+      "type": "select",
+      "layout": {
+        "row": "Row_18vpovu",
+        "columns": null
+      },
+      "id": "Field_1cvx5b6",
+      "key": "priority"
+    },
+    {
+      "text": "#### Select employees for this assignment",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_0vpvlig",
+        "columns": null
+      },
+      "id": "Field_04nxswt"
+    },
+    {
+      "values": [
+        {
+          "label": "David",
+          "value": "David"
+        },
+        {
+          "label": "Diana",
+          "value": "Diana"
+        },
+        {
+          "label": "Mike",
+          "value": "Mike"
+        }
+      ],
+      "label": "",
+      "type": "select",
+      "layout": {
+        "row": "Row_0cou6nr",
+        "columns": null
+      },
+      "id": "Field_0ekjf3j",
+      "key": "ITMenber"
+    }
+  ],
+  "type": "default"
+}

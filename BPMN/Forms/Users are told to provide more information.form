@@ -1,0 +1,54 @@
+{
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "74f16d4"
+  },
+  "schemaVersion": 16,
+  "id": "users-are-told-to-provide-more-information-1yidhiy",
+  "components": [
+    {
+      "text": "#### More advice is needed below",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_0z8zuo2",
+        "columns": null
+      },
+      "id": "Field_0sltb3j"
+    },
+    {
+      "label": "",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_08srcg9",
+        "columns": null
+      },
+      "id": "Field_1d2c92h",
+      "key": "moreInfoNeeded",
+      "readonly": true
+    },
+    {
+      "text": "#### Provide more information",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_0v32u71",
+        "columns": null
+      },
+      "id": "Field_09vk6b9"
+    },
+    {
+      "label": "",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_0b1qmpl",
+        "columns": null
+      },
+      "id": "Field_0dz5e3a",
+      "key": "MoreInfo"
+    }
+  ],
+  "type": "default"
+}

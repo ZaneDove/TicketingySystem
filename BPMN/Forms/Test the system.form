@@ -1,0 +1,33 @@
+{
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "dfa4d1c"
+  },
+  "schemaVersion": 16,
+  "id": "test-the-system-0566csu",
+  "components": [
+    {
+      "text": "#### Test Result",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_1ojqy9p",
+        "columns": null
+      },
+      "id": "Field_0l14fhp"
+    },
+    {
+      "label": "Did the test pass?",
+      "type": "checkbox",
+      "layout": {
+        "row": "Row_0z1yl0w",
+        "columns": null
+      },
+      "id": "Field_0j2h5aa",
+      "key": "pass"
+    }
+  ],
+  "type": "default"
+}

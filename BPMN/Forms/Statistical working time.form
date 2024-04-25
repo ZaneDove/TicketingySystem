@@ -1,0 +1,55 @@
+{
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "74f16d4"
+  },
+  "schemaVersion": 16,
+  "id": "statistical-working-time-1xi9q60",
+  "components": [
+    {
+      "text": "#### Ticket finish date",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_1xtr9i4",
+        "columns": null
+      },
+      "id": "Field_1v9y35g"
+    },
+    {
+      "subtype": "date",
+      "dateLabel": "Date",
+      "label": "Date time",
+      "type": "datetime",
+      "layout": {
+        "row": "Row_0e6pf6t",
+        "columns": null
+      },
+      "id": "Field_0ytcdnr",
+      "key": "actualResolutionTime"
+    },
+    {
+      "text": "#### How many hours did you spend on this ticket?",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_00jhy9y",
+        "columns": null
+      },
+      "id": "Field_0h98ghv"
+    },
+    {
+      "label": "Hours",
+      "type": "number",
+      "layout": {
+        "row": "Row_1f2jnwk",
+        "columns": null
+      },
+      "id": "Field_02qa566",
+      "key": "loggedTime"
+    }
+  ],
+  "type": "default"
+}

@@ -1,0 +1,68 @@
+{
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.4.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "dfa4d1c"
+  },
+  "schemaVersion": 16,
+  "id": "UserSurvey",
+  "components": [
+    {
+      "label": "User Name:",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1szcn89",
+        "columns": null
+      },
+      "id": "Field_1vk1n25",
+      "key": "name",
+      "readonly": true
+    },
+    {
+      "values": [
+        {
+          "label": "Yes",
+          "value": "value"
+        },
+        {
+          "label": "Partly",
+          "value": "value2"
+        },
+        {
+          "label": "No",
+          "value": "value3"
+        }
+      ],
+      "label": "Was the issue resolved?",
+      "type": "radio",
+      "layout": {
+        "row": "Row_1s7evim",
+        "columns": null
+      },
+      "id": "Field_0y8n3ez",
+      "key": "radio_j9huzi"
+    },
+    {
+      "label": "Feedback:",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_0xyd05g",
+        "columns": null
+      },
+      "id": "Field_1mh8m1y",
+      "key": "textarea_22oc2f"
+    },
+    {
+      "label": "Satisfied",
+      "type": "checkbox",
+      "layout": {
+        "row": "Row_0ciifql",
+        "columns": null
+      },
+      "id": "Field_0trb0ab",
+      "key": "satisfaction"
+    }
+  ],
+  "type": "default"
+}

@@ -1,0 +1,23 @@
+{
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.4.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "1b2ccf0"
+  },
+  "schemaVersion": 15,
+  "id": "issueFixed",
+  "components": [
+    {
+      "label": "is the issue resolved",
+      "type": "checkbox",
+      "layout": {
+        "row": "Row_0qd3ujj",
+        "columns": null
+      },
+      "id": "Field_1wvidss",
+      "key": "issueResolved"
+    }
+  ],
+  "type": "default"
+}
