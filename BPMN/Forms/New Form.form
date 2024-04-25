@@ -1,0 +1,43 @@
+{
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "6a7be38"
+  },
+  "schemaVersion": 16,
+  "id": "Form_1wpuwg0",
+  "components": [
+    {
+      "text": "#### Choose how you would like to report the issue.",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_1fefbhv",
+        "columns": null
+      },
+      "id": "Field_0w2hr30"
+    },
+    {
+      "values": [
+        {
+          "label": "web portal",
+          "value": "web"
+        },
+        {
+          "label": "Email",
+          "value": "email"
+        }
+      ],
+      "label": "Select",
+      "type": "select",
+      "layout": {
+        "row": "Row_06fnho7",
+        "columns": null
+      },
+      "id": "Field_0xlstep",
+      "key": "select"
+    }
+  ],
+  "type": "default"
+}

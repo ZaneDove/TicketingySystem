@@ -1,0 +1,68 @@
+{
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.4.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "dfa4d1c"
+  },
+  "schemaVersion": 16,
+  "id": "suffcientInfoForm",
+  "components": [
+    {
+      "text": "#### Assessing Information Intergirty",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_0o5xg1z",
+        "columns": null
+      },
+      "id": "Field_0r6zdtv"
+    },
+    {
+      "label": "Development Ticket",
+      "type": "checkbox",
+      "layout": {
+        "row": "Row_0n0mgf1",
+        "columns": null
+      },
+      "id": "Field_15fxdk4",
+      "key": "isDevelopment",
+      "readonly": true
+    },
+    {
+      "label": "Issue description",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_02qufjj",
+        "columns": null
+      },
+      "id": "Field_1jelai7",
+      "key": "issueDescription",
+      "readonly": true
+    },
+    {
+      "label": "Do you have suffcient infomation?",
+      "type": "checkbox",
+      "layout": {
+        "row": "Row_10ft5hf",
+        "columns": null
+      },
+      "id": "Field_1fj5q76",
+      "key": "suffcientInfo"
+    },
+    {
+      "label": "What more info is required?",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_14kj7mz",
+        "columns": null
+      },
+      "id": "Field_1me187q",
+      "key": "moreInfoNeeded",
+      "conditional": {
+        "hide": "=suffcientInfo=true"
+      }
+    }
+  ],
+  "type": "default"
+}

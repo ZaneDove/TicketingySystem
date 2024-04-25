@@ -1,0 +1,37 @@
+{
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.4.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "8c03b57"
+  },
+  "schemaVersion": 16,
+  "id": "TicketAssignment",
+  "components": [
+    {
+      "values": [
+        {
+          "label": "David",
+          "value": "David"
+        },
+        {
+          "label": "Daniel",
+          "value": "Daniel"
+        },
+        {
+          "label": "Sophia",
+          "value": "Sophia"
+        }
+      ],
+      "label": "Ticket Assignment",
+      "type": "select",
+      "layout": {
+        "row": "Row_0fuvj2c",
+        "columns": null
+      },
+      "id": "Field_17bjc8j",
+      "key": "ITMenber"
+    }
+  ],
+  "type": "default"
+}

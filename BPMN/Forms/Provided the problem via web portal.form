@@ -1,0 +1,116 @@
+{
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "6a7be38"
+  },
+  "schemaVersion": 16,
+  "id": "provided-the-problem-via-web-portal-0hb2mlc",
+  "components": [
+    {
+      "text": "### Email Form",
+      "type": "text",
+      "id": "Heading_0",
+      "layout": {
+        "row": "row_0",
+        "columns": null
+      }
+    },
+    {
+      "type": "textfield",
+      "id": "Textfield_2",
+      "label": "First Name",
+      "validate": {
+        "minLength": 2,
+        "required": true
+      },
+      "key": "name",
+      "layout": {
+        "row": "row_2",
+        "columns": null
+      }
+    },
+    {
+      "type": "textfield",
+      "id": "Textfield_4",
+      "label": "Email Address",
+      "validate": {
+        "minLength": 6,
+        "maxLength": 50,
+        "required": true
+      },
+      "key": "email",
+      "layout": {
+        "row": "Row_1326qtj",
+        "columns": null
+      }
+    },
+    {
+      "label": "Main body",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_1gcer6t",
+        "columns": null
+      },
+      "id": "Field_16khz3l",
+      "key": "issueDescription"
+    },
+    {
+      "values": [
+        {
+          "label": "High",
+          "value": "high"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Low",
+          "value": "low"
+        }
+      ],
+      "label": "Priority",
+      "type": "radio",
+      "layout": {
+        "row": "Row_1aluzwy",
+        "columns": null
+      },
+      "id": "Field_1ah7ren",
+      "key": "priority",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "values": [
+        {
+          "label": "High",
+          "value": "high"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Low",
+          "value": "low"
+        }
+      ],
+      "label": "Effect",
+      "type": "radio",
+      "layout": {
+        "row": "Row_1aluzwy",
+        "columns": null
+      },
+      "id": "Field_0alswh1",
+      "key": "effect",
+      "validate": {
+        "required": true
+      }
+    }
+  ],
+  "generated": true,
+  "type": "default"
+}
