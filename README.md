@@ -11,7 +11,7 @@
 
 6. **Create process of BPMN in Camunda
 
-7. ** Go to the task list page work through tasks
+7. **Go to the task list page work through tasks
 
 ## Configuration of Database
 
