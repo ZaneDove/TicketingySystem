@@ -4,48 +4,80 @@ import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.client.api.worker.JobClient;
 import io.camunda.zeebe.spring.client.EnableZeebeClient;
 import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
+import org.example.Controller.TicketServer;
+import org.example.Controller.UserServer;
+import org.example.Model.Ticket;
+import org.example.Model.User;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+
+
 
 @SpringBootApplication
 @EnableZeebeClient
 public class Main {
     ArrayList<Ticket> ticketArrayList = new ArrayList<Ticket>();
+    Ticket ticket;
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
     }
 
-    //open ticket worker
+    TicketServer ticketServer = new TicketServer();
+
+    //Open ticket
     @ZeebeWorker(type = "OpenTicket")
     public void OpenTicket(final JobClient client, final ActivatedJob job) {
         //get variables as map
         Map<String, Object> variablesAsMap = job.getVariablesAsMap();
-        // get priority and issueDescription
-        String priority = (String) variablesAsMap.get("priority");
-        String info = (String) variablesAsMap.get("issueDescription");
+
+        // get User parameter
+        String name = (String) variablesAsMap.get("name");
         String email = (String) variablesAsMap.get("email");
+
+        //get Ticket parameter
+        String ticketInfo = (String) variablesAsMap.get("issueDescription");
+        String priority = (String) variablesAsMap.get("priority");
         String effect = (String) variablesAsMap.get("effect");
-        //new ticket
-        Ticket ticket;
-        //if list is empty ticket no = 1, else ti ticketNo = list size + 1
-        if (ticketArrayList.isEmpty()) {
-            ticket = new Ticket(1, info, true, priority, email, effect);
-        } else {
-            ticket = new Ticket((ticketArrayList.size() + 1), info, true, priority, email, effect);
-        }
-        //add to list
-        ticketArrayList.add(ticket);
+        String status = "Open";
+        int responseTimeInDays = 0;
+        int resolutionTimeInDays = 0;
+        Time actualResolutionTime = null;
+        Time loggedTime = null;
+        String ITMenber = null;
+
+        //create User in DB
+        User user = new User(name,email);
+        UserServer userServer = new UserServer();
+        userServer.insertUser(user);
+        int userID = user.getUserNo();
+
+        //create new ticket in DB
+        ticket = new Ticket(userID,ticketInfo,priority,effect,status,responseTimeInDays,resolutionTimeInDays,actualResolutionTime,loggedTime,ITMenber);
+        ticketServer.insertTicket(ticket);
+
         //add ticket no to map
         HashMap<String, Object> variables = new HashMap<>();
-
-
         //complete job send ticketNo
         variables.put("ticketNo", ticket.getTicketNo());
+        variables.put("priority_cover", ticket.getPriority());
+        variables.put("effect_cover", ticket.getEffect());
+
+        //Method run code
         client.newCompleteCommand(job.getKey())
                 .variables(variables)
                 .send()
@@ -55,39 +87,24 @@ public class Main {
 
     }
 
-    // zeebe worker start
+    //Determine SLA
     @ZeebeWorker(type = "DetermineSLA")
     public void DetermineSLA(final JobClient client, final ActivatedJob job) {
         // //get variables as map
         Map<String, Object> variablesAsMap = job.getVariablesAsMap();
 
-        // get ticketNo, effect and priority from map
+        //IT manager overwrites the user's selection
         String effect = (String) variablesAsMap.get("effect");
-        String priority = (String) variablesAsMap.get("priority");
-        int ticketNo = (int) variablesAsMap.get("ticketNo");
-        //create temp ticket and check changes
-        Ticket tempTicket = getTicket(ticketNo);
+        String priority = (String)variablesAsMap.get("priority");
+        String member = (String)variablesAsMap.get("ITMenber");
+        Boolean isDevelopment = (Boolean) variablesAsMap.get("isDevelopment");
 
+        int TicketNo = ticket.getTicketNo();
+        ticketServer.updateTicketPriorityAndEffect(TicketNo,priority,effect,member,isDevelopment);
 
-        //ticket in array = temp ticket
-        if (ticketNo <= ticketArrayList.size()) {
-            ticketArrayList.set(ticketNo - 1, tempTicket);
-        } else {
-            System.out.println("The input ticket number is out of range");
-            return;  // Return from the method or handle this wrong input case accordingly.
-        }
-        //create SlaTimeCalc object
-        SlaTimeCalc timeCalc = new SlaTimeCalc(effect, priority);
-        //get times from Calc
-        tempTicket.setResponseTimeInDays(timeCalc.getResponseTime());
-        tempTicket.setResolutionTimeInDays(timeCalc.getResolutionTime());
-        //check for ticket updates
-        tempTicket.checkPriorityEffect(priority, effect);
         //add ticket no to map
         HashMap<String, Object> variables = new HashMap<>();
-        //complete job send ticketNo
-        variables.put("responseTime", tempTicket.getResponseTimeInDays());
-        variables.put("resolutionTime", tempTicket.getResolutionTimeInDays());
+
         // job complete
         client.newCompleteCommand(job.getKey())
                 .variables(variables)
@@ -98,37 +115,17 @@ public class Main {
 
     }
 
-    //get ticket
-    //use newTicket name = getTicket(ticket number); to find ticket from array
-    private Ticket getTicket(int ticketNo) {
-        //check if ticket exists
-        // Check if ticket exists before trying to get from list
-        if (ticketNo <= ticketArrayList.size()) {
-            return ticketArrayList.get(ticketNo - 1);
-        } else {
-            System.out.println("No such ticket exists in the list");
-            return null;
-            // check ticket priority and effect are not changed
-        }
-    }
+    @ZeebeWorker(type = "ChangeOpenTicket")
+    public void ChangeOpenTicket(final JobClient client, final ActivatedJob job){
+        int TicketNo = ticket.getTicketNo();
+        ticketServer.markTicketAsOpen(TicketNo);
 
+        //add ticket no to map
+        HashMap<String, Object> variables = new HashMap<>();
 
-    @ZeebeWorker(type = "closeTicket")
-    public void closeTicket(final JobClient client, final ActivatedJob job) {
-        // get variables as map
-        Map<String, Object> variablesAsMap = job.getVariablesAsMap();
-        // get ticket no as string
-        int ticketNo = (int) variablesAsMap.get("ticketNo");
-        //get ticket from array list (ticketNo - 1)
-        Ticket tempTicket = ticketArrayList.get(ticketNo - 1);
-        // ticket open = false
-        tempTicket.setTicketOpen(false);
-        //ticket in array = temp ticket
-        ticketArrayList.set(ticketNo - 1, tempTicket);
-        //print ticket closed
-        System.out.print("ticket " + ticketNo + " closed");
-        //job complete
+        // job complete
         client.newCompleteCommand(job.getKey())
+                .variables(variables)
                 .send()
                 .exceptionally((throwable -> {
                     throw new RuntimeException("Could not complete job", throwable);
@@ -136,5 +133,207 @@ public class Main {
 
     }
 
+    //Sending fake email use postman
+    private final HttpClient httpClient = HttpClient.newHttpClient();
+    @ZeebeWorker(type = "AskMoreInfo")
+    public void askMoreInfo(final JobClient jobClient, final ActivatedJob job) {
+        try {
+            String requestBody = """
+                    {
+                      "to": "user@example.com",
+                      "subject": "Test Email",
+                      "body": "This is a test email to demonstrate the process."
+                    }
+                    """;
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://d910014c-53fc-4d7e-9f39-23947305ef2a.mock.pstmn.io/request-info"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                System.out.println("More information is provided");
+                // Assuming "success" is a variable in the BPMN model
+                jobClient.newCompleteCommand(job.getKey())
+                        .variables("{\"success\": true}")
+                        .send()
+                        .join();
+            } else {
+                // Non-successful status code handling
+                System.out.println("Failed to send email. Status code: " + response.statusCode());
+                jobClient.newFailCommand(job.getKey())
+                        .retries(job.getRetries() - 1)
+                        .errorMessage("Failed to send email")
+                        .send()
+                        .join();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Send a failure message back to the Zeebe engine
+            jobClient.newFailCommand(job.getKey())
+                    .retries(job.getRetries() - 1)
+                    .errorMessage("Exception occurred: " + e.getMessage())
+                    .send()
+                    .join();
+        }
+    }
+
+    @ZeebeWorker(type = "CompletedTicket")
+    public void CompletedTicket(final JobClient jobClient, final ActivatedJob job){
+        int TicketNO = ticket.getTicketNo();
+        ticketServer.markTicketAsCompleted(TicketNO);
+
+        try {
+            String requestBody = """
+                    {
+                      "to": "user@example.com",
+                      "subject": "Ticket Completed",
+                      "body": "Your ticket is complete, please confirm"
+                    }
+                    """;
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://d910014c-53fc-4d7e-9f39-23947305ef2a.mock.pstmn.io/CompletedTicket"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                System.out.println("Ok, I'll confirm it later");
+                // Assuming "success" is a variable in the BPMN model
+                jobClient.newCompleteCommand(job.getKey())
+                        .variables("{\"success\": true}")
+                        .send()
+                        .join();
+            } else {
+                // Non-successful status code handling
+                System.out.println("Failed to send email. Status code: " + response.statusCode());
+                jobClient.newFailCommand(job.getKey())
+                        .retries(job.getRetries() - 1)
+                        .errorMessage("Failed to send email")
+                        .send()
+                        .join();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Send a failure message back to the Zeebe engine
+            jobClient.newFailCommand(job.getKey())
+                    .retries(job.getRetries() - 1)
+                    .errorMessage("Exception occurred: " + e.getMessage())
+                    .send()
+                    .join();
+        }
+
+
+    }
+
+    @ZeebeWorker(type = "SentServey")
+    public void SentServey(final JobClient jobClient, final ActivatedJob job) {
+        //get variables as map
+        Map<String, Object> variablesAsMap = job.getVariablesAsMap();
+
+        int TicketNO = ticket.getTicketNo();
+        String datetime = (String) variablesAsMap.get("actualResolutionTime");
+
+        // Assuming the datetime string is in the format "yyyy-MM-dd" since it's just a date
+        LocalDate date = LocalDate.parse(datetime, DateTimeFormatter.ISO_LOCAL_DATE);
+
+        // Correct way to convert LocalDate to java.sql.Date
+        Date actualResolutionTime = Date.valueOf(date);
+        int loggedTime = (int) variablesAsMap.get("loggedTime");
+
+        ticketServer.setFinishTimes(TicketNO,actualResolutionTime,loggedTime);
+
+        try {
+            String requestBody = """
+                    {
+                      "to": "user@example.com",
+                      "subject": "Test Email",
+                      "body": "This is a test email to demonstrate the process."
+                    }
+                    """;
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://d910014c-53fc-4d7e-9f39-23947305ef2a.mock.pstmn.io/submit-survey"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                System.out.println("Receipt of survey results");
+                // Assuming "success" is a variable in the BPMN model
+                jobClient.newCompleteCommand(job.getKey())
+                        .variables("{\"success\": true}")
+                        .send()
+                        .join();
+            } else {
+                // Non-successful status code handling
+                System.out.println("Failed to send email. Status code: " + response.statusCode());
+                jobClient.newFailCommand(job.getKey())
+                        .retries(job.getRetries() - 1)
+                        .errorMessage("Failed to send email")
+                        .send()
+                        .join();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Send a failure message back to the Zeebe engine
+            jobClient.newFailCommand(job.getKey())
+                    .retries(job.getRetries() - 1)
+                    .errorMessage("Exception occurred: " + e.getMessage())
+                    .send()
+                    .join();
+        }
+    }
+
+    @ZeebeWorker(type = "MoreInfoStroeDB")
+    public void MoreInfoStroeDB(final JobClient client, final ActivatedJob job){
+        int TicketNo = ticket.getTicketNo();
+
+        Map<String, Object> variablesAsMap = job.getVariablesAsMap();
+        String issueDescription = (String) variablesAsMap.get("issueDescription");
+        String moreInfo = (String) variablesAsMap.get("MoreInfo");
+
+        ticketServer.appendToTicketInfo(TicketNo,moreInfo);
+
+        //add ticket no to map
+        HashMap<String, Object> variables = new HashMap<>();
+        variables.put("issueDescription",issueDescription+"//  provide more information: "+moreInfo);
+
+        // job complete
+        client.newCompleteCommand(job.getKey())
+                .variables(variables)
+                .send()
+                .exceptionally((throwable -> {
+                    throw new RuntimeException("Could not complete job", throwable);
+                }));
+
+
+    }
+
+    @ZeebeWorker(type = "closeTicket")
+    public void closeTicket(final JobClient client, final ActivatedJob job){
+        int TicketNo = ticket.getTicketNo();
+        ticketServer.CloseTicket(TicketNo);
+
+        //add ticket no to map
+        HashMap<String, Object> variables = new HashMap<>();
+
+        // job complete
+        client.newCompleteCommand(job.getKey())
+                .variables(variables)
+                .send()
+                .exceptionally((throwable -> {
+                    throw new RuntimeException("Could not complete job", throwable);
+                }));
+
+    }
 
 }
