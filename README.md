@@ -1,17 +1,17 @@
 ## Instruction for use
-1. **Upload the BPMN to Camunda 8 cloud service
+1. Upload the BPMN to Camunda 8 cloud service
    
-2. **Run MySQL, set up if needed (instructions below)
+2. Run MySQL, set up if needed (instructions below)
    
-3. **Run Postman, set up if needed (instructions below)
+3. Run Postman, set up if needed (instructions below)
    
-4. **Run the Ticketing System Java program
+4. Run the Ticketing System Java program
 
-5. **Create instance of BPMN in Camunda
+5. Create instance of BPMN in Camunda
 
-6. **Create process of BPMN in Camunda
+6. Create process of BPMN in Camunda
 
-7. **Go to the task list page work through tasks
+7. Go to the task list page work through tasks
 
 ## Configuration of Database
 
